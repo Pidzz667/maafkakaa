@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permintaan Maafku untukmu ❤️</title>
+    <!-- Memuat Tailwind CSS untuk styling modern dan responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat font Inter dari Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Mengatur font dasar, background gambar, dan layout untuk memusatkan konten */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('https://files.catbox.moe/t7rbl8.jpg'); /* Gambar latar belakang */
+            background-size: cover; /* Memastikan gambar mencakup seluruh latar belakang */
+            background-position: center; /* Memusatkan gambar */
+            background-repeat: no-repeat; /* Mencegah pengulangan gambar */
+            background-attachment: fixed; /* Menjaga gambar tetap saat digulir */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Memastikan tinggi minimal adalah 100% dari viewport */
+            margin: 0;
+            padding: 20px; /* Padding untuk responsivitas di perangkat seluler */
+            box-sizing: border-box;
+            position: relative; /* Penting untuk penempatan hati latar belakang */
+            overflow: hidden; /* Mencegah scroll yang tidak diinginkan dari hati latar belakang */
+        }
+
+        /* Overlay gelap untuk membuat teks lebih mudah dibaca di atas gambar latar belakang */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3); /* Overlay hitam transparan */
+            z-index: 1; /* Di bawah konten, di atas gambar */
+        }
+
+        /* Styling untuk layar pembuka */
+        .welcome-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: inherit; /* Mengambil latar belakang dari body untuk konsistensi */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: rgba(0, 0, 0, 0.3); /* Overlay yang sama dengan body::before */
+            z-index: 20; /* Z-index tinggi untuk menutupi kartu utama */
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+            text-align: center;
+        }
+
+        /* Kelas untuk menyembunyikan layar pembuka */
+        .welcome-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Styling untuk tombol "HAYY KAKAA KLIK INI KAAA!!" */
+        .welcome-button {
+            background: linear-gradient(to right, #6a82fb, #fc5c7d); /* Gradient warna cerah */
+            color: white;
+            font-weight: bold;
+            padding: 1.5rem 3rem;
+            border-radius: 9999px; /* Bentuk pil */
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 15px 20px -3px rgba(106, 130, 251, 0.5), 0 6px 8px -2px rgba(106, 130, 251, 0.2);
+            animation: floatButton 3s infinite ease-in-out; /* Animasi mengambang */
+            position: relative; /* Penting untuk penempatan hati yang menggantung */
+            overflow: hidden; /* Pastikan hati yang menggantung tidak memotong */
+            transition: all 0.3s ease;
+            z-index: 21; /* Pastikan di atas overlay welcome screen */
+        }
+
+        /* Efek hover untuk tombol selamat datang */
+        .welcome-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(106, 130, 251, 0.7), 0 10px 10px -5px rgba(106, 130, 251, 0.3);
+        }
+
+        /* Keyframe untuk animasi mengambang tombol */
+        @keyframes floatButton {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Styling untuk hati balon yang muncul dari tombol selamat datang (saat diklik) */
+        .balloon-heart {
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0;
+            animation: floatBalloon 3s ease-out forwards;
+            z-index: 21;
+            color: #ff69b4;
+            text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+        }
+
+        /* Keyframe untuk animasi hati balon melayang dan memudar */
+        @keyframes floatBalloon {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 0;
+            }
+            30% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px) scale(1.2) translateX(var(--balloon-x, 0));
+                opacity: 0;
+            }
+        }
+
+        /* Styling untuk hati yang menggantung di tombol selamat datang */
+        .hanging-heart {
+            position: absolute;
+            font-size: 1.2rem; /* Ukuran hati yang ngegantung */
+            color: #ffe6f2; /* Warna hati yang lebih terang untuk kontras */
+            text-shadow: 0 0 5px rgba(255, 224, 230, 0.8); /* Cahaya lembut */
+            animation: gentleFloat 2s infinite alternate ease-in-out; /* Animasi mengambang lembut */
+            z-index: 1; /* Di atas latar belakang tombol */
+        }
+
+        /* Keyframe untuk animasi mengambang lembut */
+        @keyframes gentleFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Specific positions for the hanging hearts */
+        .hanging-heart.top-left { top: -10px; left: 15%; animation-delay: 0s; }
+        .hanging-heart.top-right { top: -10px; right: 15%; animation-delay: 0.3s; }
+        .hanging-heart.mid-left { top: 30%; left: -5px; animation-delay: 0.6s; }
+        .hanging-heart.mid-right { top: 30%; right: -5px; animation-delay: 0.9s; }
+
+
+        /* Styling untuk kartu utama yang berisi teks permintaan maaf dan tombol */
+        .card {
+            background-color: rgba(255, 255, 255, 0.9); /* Sedikit transparan untuk melihat latar belakang */
+            border-radius: 2rem; /* Sudut lebih membulat */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Bayangan lembut */
+            max-width: 500px; /* Lebar maksimum kartu */
+            width: 100%; /* Memastikan lebar penuh di layar kecil */
+            padding: 2.5rem; /* Padding lebih besar untuk hati dekorasi */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 2; /* Pastikan kartu di atas overlay latar belakang */
+            display: none; /* Sembunyikan kartu secara default */
+            border: 3px solid #ff69b4; /* Border dasar untuk bingkai */
+            box-sizing: border-box; /* Pastikan padding dihitung dalam lebar/tinggi */
+            opacity: 0; /* Awalnya tersembunyi untuk transisi */
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(20px) scale(0.9); /* Untuk transisi slide-up dan scale-in */
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out, transform 0.5s ease-out;
+            display: flex; /* Menggunakan flexbox untuk pengaturan tata letak internal */
+            flex-direction: column; /* Mengatur elemen secara vertikal */
+            align-items: center; /* Memusatkan item secara horizontal */
+        }
+
+        /* Kelas untuk menampilkan kartu permintaan maaf */
+        .card.show-card {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+         /* Kelas untuk menyembunyikan kartu permintaan maaf dengan transisi */
+        .card.hidden-card {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(20px) scale(0.9);
+        }
+
+        /* Hiasan hati pada bingkai ucapan maaf (menggunakan pseudo-elements) */
+        .card .decor-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #ff69b4; /* Warna hati pink */
+            animation: pulseHeart 1.5s infinite alternate; /* Animasi denyutan */
+            text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+            z-index: 3; /* Di atas konten kartu tapi di bawah overlay bunga */
+        }
+        .card .decor-heart.top-left { top: 15px; left: 15px; }
+        .card .decor-heart.top-right { top: 15px; right: 15px; animation-delay: 0.3s; }
+        .card .decor-heart.bottom-left { bottom: 15px; left: 15px; animation-delay: 0.6s; }
+        .card .decor-heart.bottom-right { bottom: 15px; right: 15px; animation-delay: 0.9s; }
+
+        @keyframes pulseHeart {
+            from { transform: scale(0.9); opacity: 0.8; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+
+
+        /* Styling untuk judul ucapan maaf */
+        .apology-title {
+            color: #ff69b4;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem; /* Margin di bawah judul */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Styling untuk teks permintaan maaf */
+        .apology-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 2rem; /* Margin di bawah teks sebelum tombol */
+            font-size: 1.1rem;
+        }
+
+        /* Kontainer untuk tombol kedua */
+        .button-container {
+            margin-top: 0; /* Margin atas sudah dikelola oleh margin-bottom .apology-text */
+        }
+
+        /* Styling untuk tombol ajaib */
+        .magic-button {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(255, 126, 95, 0.5), 0 4px 6px -2px rgba(255, 126, 95, 0.2);
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Efek hover untuk tombol ajaib */
+        .magic-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 20px -3px rgba(255, 126, 95, 0.7), 0 6px 8px -2px rgba(255, 126, 95, 0.3);
+        }
+
+        /* Styling untuk halaman buket bunga */
+        .bouquet-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: inherit;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(20px) scale(0.9);
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out, transform 0.5s ease-out;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        /* Kelas untuk menampilkan halaman buket */
+        .bouquet-page.show-bouquet {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        .bouquet-title {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            z-index: 2;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* Frame untuk buket tunggal besar */
+        .single-bouquet-frame {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 3px solid #ffb6c1; /* Border pink lembut */
+            border-radius: 1.5rem; /* Sudut lebih bulat */
+            padding: 1.5rem; /* Lebih banyak padding untuk buket besar */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 20px rgba(255, 182, 193, 0.8); /* Bayangan dan glow yang lebih kuat */
+            animation: bounceScale 2s infinite alternate ease-in-out; /* Animasi utama */
+            transition: transform 0.3s ease; /* Untuk efek hover */
+            cursor: pointer;
+            width: 90%; /* Lebar responsif */
+            max-width: 450px; /* Ukuran maksimal */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-bottom: 2rem; /* Jarak antara buket dan tombol baru */
+        }
+
+        .single-bouquet-frame:hover {
+            transform: translateY(-8px) scale(1.05);
+        }
+
+        /* Hiasan bintang yang membentuk hati di sekitar buket */
+        .star-heart-deco {
+            position: absolute;
+            font-size: 1.2rem;
+            color: #fff; /* Warna bintang putih */
+            text-shadow: 0 0 8px #ff69b4, 0 0 15px #ffe6f2; /* Glow pink */
+            animation: pulseStar 1.5s infinite alternate ease-in-out;
+            opacity: 0; /* Sembunyikan secara default */
+            z-index: 1; /* Di atas gambar buket */
+        }
+        @keyframes pulseStar {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Styling untuk tombol di halaman buket (INI KAK KLIK KAAA) */
+        .show-photos-button {
+            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045); /* Gradient Instagram */
+            color: white;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2), 0 4px 6px -2px rgba(0,0,0,0.1);
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .show-photos-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 20px -3px rgba(0,0,0,0.3), 0 6px 8px -2px rgba(0,0,0,0.15);
+        }
+
+        .bouquet-item { /* Ini akan berlaku untuk satu gambar di dalam .single-bouquet-frame */
+            width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        @keyframes bounceScale {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.03); }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        /* Styling untuk hati yang berjatuhan di latar belakang */
+        .falling-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            animation: fall 10s linear infinite;
+            z-index: 5; /* Di atas overlay body::before, tapi di bawah konten utama */
+            text-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Styling untuk halaman galeri foto */
+        .photo-gallery-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Mengatur konten ke atas untuk memungkinkan scroll */
+            align-items: center;
+            background: inherit;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: rgba(0, 0, 0, 0.6); /* Lebih gelap untuk fokus pada foto */
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(20px) scale(0.9);
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out, transform 0.5s ease-out;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto; /* Izinkan scroll jika konten melebihi tinggi layar */
+            padding-top: 4rem; /* Padding atas untuk judul */
+            padding-bottom: 4rem; /* Padding bawah untuk menjaga ruang dengan tombol akhir */
+        }
+        /* Kelas untuk menampilkan halaman galeri foto */
+        .photo-gallery-page.show-gallery {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Styling untuk tombol judul galeri */
+        .gallery-title-button {
+            background: none; /* Tanpa latar belakang */
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            text-align: center;
+            line-height: 1.2;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            padding: 10px 20px; /* Padding agar hati dekorasi punya ruang */
+            transition: transform 0.2s ease-in-out;
+            margin-top: 0; /* Pastikan tidak ada margin-top berlebihan */
+        }
+
+        .gallery-title-button:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-title-button .decor-heart { /* Hiasan hati pada judul galeri */
+            position: absolute;
+            font-size: 1.2rem;
+            color: #ff69b4;
+            animation: pulseHeart 1.5s infinite alternate;
+            text-shadow: 0 0 3px rgba(255, 105, 180, 0.5);
+        }
+        .gallery-title-button .decor-heart.tl { top: 0; left: 0; }
+        .gallery-title-button .decor-heart.tr { top: 0; right: 0; animation-delay: 0.2s; }
+        .gallery-title-button .decor-heart.bl { bottom: 0; left: 0; animation-delay: 0.4s; }
+        .gallery-title-button .decor-heart.br { bottom: 0; right: 0; animation-delay: 0.6s; }
+
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Kolom responsif lebih besar */
+            gap: 1.5rem;
+            padding: 1rem;
+            max-width: 1000px; /* Lebar maksimal grid */
+            width: 100%;
+            margin-bottom: 20px; /* Tambahkan margin bawah jika bisa discroll */
+        }
+
+        .gallery-image-wrapper {
+            background-color: rgba(255, 255, 255, 0.95); /* Sedikit lebih solid */
+            border-radius: 1.2rem; /* Sudut lebih membulat */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25); /* Bayangan lebih kuat */
+            overflow: hidden;
+            position: relative;
+            padding: 0.7rem; /* Padding sedikit lebih besar */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            
+            /* Initial state for animation */
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .gallery-image-wrapper.animate-in {
+            animation: fadeInSlideUp 0.6s forwards ease-out; /* Animasi masuk */
+        }
+
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gallery-image-wrapper:hover {
+            transform: translateY(-5px) scale(1.02); /* Sedikit naik dan membesar */
+            box-shadow: 0 15px 30px rgba(0,0,0,0.35); /* Bayangan lebih kuat saat hover */
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 0.9rem; /* Mirip dengan wrapper galeri */
+        }
+
+        /* Styling untuk ucapan terakhir di galeri */
+        .final-message {
+            color: white;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem; /* Jarak dengan tombol WA */
+            padding: 0 1rem; /* Padding horizontal */
+            max-width: 600px; /* Batasi lebar teks */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* Styling untuk tombol WhatsApp */
+        .whatsapp-button {
+            background: linear-gradient(to right, #25d366, #128c7e); /* Warna WhatsApp */
+            color: white;
+            font-weight: bold;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2), 0 4px 6px -2px rgba(0,0,0,0.1);
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            margin-bottom: 2rem; /* Jarak dari bawah halaman */
+        }
+        .whatsapp-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 20px -3px rgba(0,0,0,0.3), 0 6px 8px -2px rgba(0,0,0,0.15);
+        }
+
+
+        /* Styling untuk modal gambar */
+        .image-modal-overlay {
+            position: fixed; /* Tetap di viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Overlay lebih gelap */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 30; /* Di atas semua elemen lain */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .image-modal-overlay.show-modal {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            background-color: white;
+            padding: 1.5rem; /* Padding lebih besar */
+            border-radius: 2rem; /* Sudut lebih membulat */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); /* Bayangan lebih kuat */
+            transform: scale(0.8); /* Mulai dari kecil */
+            transition: transform 0.3s ease-in-out;
+            display: flex; /* Untuk pemusatan gambar di dalamnya */
+            justify-content: center;
+            align-items: center;
+        }
+        .image-modal-overlay.show-modal .modal-content {
+            transform: scale(1); /* Membesar saat muncul */
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            border-radius: 1.2rem; /* Mirip dengan wrapper galeri */
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.8); /* Sedikit lebih solid */
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            width: 40px; /* Ukuran lebih besar */
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .close-button:hover {
+            background-color: rgba(255, 255, 255, 1);
+            color: #ff69b4;
+            transform: scale(1.1);
+        }
+
+        /* Media query untuk layar yang lebih kecil (misalnya, ponsel) */
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+            .welcome-button {
+                padding: 1rem 2rem;
+                font-size: 1.2rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            .apology-title {
+                font-size: 1.5rem;
+            }
+            .apology-text {
+                font-size: 1rem;
+            }
+            .magic-button {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+            }
+            .bouquet-title, .gallery-title-button {
+                font-size: 1.8rem;
+            }
+            .single-bouquet-frame {
+                width: 90%;
+                max-width: 300px;
+                padding: 1rem;
+            }
+            .star-heart-deco {
+                font-size: 0.8rem; /* Bintang lebih kecil di ponsel */
+            }
+            .falling-heart {
+                font-size: 1rem;
+            }
+            .image-grid {
+                grid-template-columns: 1fr; /* Satu kolom di ponsel */
+                gap: 1rem;
+            }
+            .final-message {
+                font-size: 0.9rem;
+            }
+            .whatsapp-button {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+            .close-button {
+                top: 10px; right: 10px;
+                font-size: 1.2rem;
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Layar Pembuka -->
+    <div id="welcomeScreen" class="welcome-screen">
+        <button id="welcomeButton" class="welcome-button">
+            HAYY KAKAA KLIK INI KAAA!!
+            <!-- Balon love yang ngegantung di tombol -->
+            <span class="hanging-heart top-left">💖</span>
+            <span class="hanging-heart top-right">💖</span>
+            <span class="hanging-heart mid-left">💖</span>
+            <span class="hanging-heart mid-right">💖</span>
+        </button>
+    </div>
+
+    <!-- Kartu Permintaan Maaf Utama -->
+    <div id="apologyCard" class="card">
+        <h2 class="apology-title">HAYY KAKAA DI BACAA YAA XIXIXIIX</h2>
+        <p class="apology-text">
+            Kakaa hayy hayyy, maafin adekk ya kaaa, kaka jangan marah2 terus adek sedih bangett tauu yaa walapun kaka marah gara2 adekk hehee, adekk minta maaf banget yaa kee kaka, adekk kemaren cuma bercanda doang tapi malah bercandaannya kelewat banget, adek minta maaf yaa kakaa, ayoo laa kakaa jangan marah2 terus kee adekk nanti adek nangis gimana, adek sering banget buat kakaa marahh yaa adekk minta maaf yaa kakaa semoga kaka tetep nyaman sama adek walapun yaa gitu adek sering buat kaka marahh kaka jangan ninggalin adek yaa kakk, semoga kaka maafin adekk jangan marah2 teruss ya kakk nanti cantik nyaa hilang di ambil orang gimanaa gaa bolee laa, Lopeelopee kakaaaa💞💞💞
+        </p>
+        <div class="button-container">
+            <button id="magicButton" class="magic-button">KLIK INII KAKK ADAA SESUATU BUAT KAKAA</button>
+        </div>
+        <!-- Hati dekorasi di sudut-sudut kartu -->
+        <span class="decor-heart top-left">💖</span>
+        <span class="decor-heart top-right">💖</span>
+        <span class="decor-heart bottom-left">💖</span>
+        <span class="decor-heart bottom-right">💖</span>
+    </div>
+
+    <!-- Halaman Buket Bunga -->
+    <div id="bouquetPage" class="bouquet-page">
+        <h2 class="bouquet-title">BUAT KAKA NIH AMBIL XIXIXIIX</h2>
+        <div class="single-bouquet-frame">
+            <img src="https://files.catbox.moe/y3h17e.png" alt="Buket Bunga Cantik" class="bouquet-item"
+                 onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/333333?text=Buket+Besar';" />
+            <!-- Hiasan bintang membentuk hati (secara visual) -->
+            <span class="star-heart-deco" style="top: 10%; left: 45%; animation-delay: 0s;">✨</span>
+            <span class="star-heart-deco" style="top: 25%; left: 70%; animation-delay: 0.2s;">✨</span>
+            <span class="star-heart-deco" style="top: 50%; left: 80%; animation-delay: 0.4s;">✨</span>
+            <span class="star-heart-deco" style="top: 75%; left: 70%; animation-delay: 0.6s;">✨</span>
+            <span class="star-heart-deco" style="top: 90%; left: 45%; animation-delay: 0.8s;">✨</span>
+            <span class="star-heart-deco" style="top: 75%; left: 20%; animation-delay: 1s;">✨</span>
+            <span class="star-heart-deco" style="top: 50%; left: 10%; animation-delay: 1.2s;">✨</span>
+            <span class="star-heart-deco" style="top: 25%; left: 20%; animation-delay: 1.4s;">✨</span>
+        </div>
+        <button id="showPhotosButton" class="show-photos-button">INI KAK KLIK KAAA</button>
+    </div>
+
+    <!-- Halaman Galeri Foto -->
+    <div id="photoGalleryPage" class="photo-gallery-page">
+        <button id="galleryTitleButton" class="gallery-title-button">
+            NIHH KAKAKU CANTIKK KANN GEMESSS
+            <span class="decor-heart tl">💖</span>
+            <span class="decor-heart tr">💖</span>
+            <span class="decor-heart bl">💖</span>
+            <span class="decor-heart br">💖</span>
+        </button>
+        <div class="image-grid">
+            <div class="gallery-image-wrapper">
+                <img src="https://files.catbox.moe/6aepap.jpg" alt="Foto Pacar 1" class="gallery-image"
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/333333?text=Foto+1';" />
+            </div>
+            <div class="gallery-image-wrapper">
+                <img src="https://files.catbox.moe/9oovqo.jpg" alt="Foto Pacar 2" class="gallery-image"
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/333333?text=Foto+2';" />
+            </div>
+            <div class="gallery-image-wrapper">
+                <img src="https://files.catbox.moe/y323sc.jpg" alt="Foto Pacar 3" class="gallery-image"
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/333333?text=Foto+3';" />
+            </div>
+            <div class="gallery-image-wrapper">
+                <img src="https://files.catbox.moe/c9pbea.jpg" alt="Foto Pacar 4" class="gallery-image"
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/333333?text=Foto+4';" />
+            </div>
+            <div class="gallery-image-wrapper">
+                <img src="https://files.catbox.moe/fcqp14.jpg" alt="Foto Pacar 5" class="gallery-image"
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/333333?text=Foto+5';" />
+            </div>
+            <div class="gallery-image-wrapper">
+                <img src="https://files.catbox.moe/y4s094.jpg" alt="Foto Pacar 6" class="gallery-image"
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/333333?text=Foto+6';" />
+            </div>
+            <div class="gallery-image-wrapper">
+                <img src="https://files.catbox.moe/l010cg.jpg" alt="Foto Pacar 7" class="gallery-image"
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/333333?text=Foto+7';" />
+            </div>
+            <div class="gallery-image-wrapper">
+                <img src="https://files.catbox.moe/q4fnlf.jpg" alt="Foto Pacar 8" class="gallery-image"
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x400/cccccc/333333?text=Foto+8';" />
+            </div>
+        </div>
+        <p class="final-message">
+            Gimanaa gimanaa? gemes bangett kan kakaku cantikk bangett lagii lucuuu, izin ngambil fotonya dii tiktok yaa kakaa hehee lopee kakaa
+        </p>
+        <button id="whatsappButton" class="whatsapp-button">KLIK LAGI DONG KAKK HEHEE</button>
+    </div>
+
+    <!-- Modal Gambar -->
+    <div id="imageModal" class="image-modal-overlay">
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Foto Pacar Besar" class="modal-image">
+            <span id="closeModal" class="close-button">X</span>
+            <!-- Hati yang muncul di modal akan ditambahkan secara dinamis oleh JS -->
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk membuat hati berjatuhan di latar belakang
+        function createFallingHeart() {
+            const heart = document.createElement('span');
+            heart.classList.add('falling-heart');
+            const heartEmojis = ['❤️', '💖', '💗', '💓', '💕', '💞'];
+            heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            document.body.appendChild(heart);
+
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.top = `-${Math.random() * 20}vh`;
+            heart.style.animationDuration = `${7 + Math.random() * 5}s`;
+            heart.style.animationDelay = `-${Math.random() * 10}s`;
+            heart.style.opacity = `${0.4 + Math.random() * 0.6}`;
+            heart.style.fontSize = `${1 + Math.random() * 2}rem`;
+            heart.style.setProperty('--random-rotation', `${Math.random() * 360}deg`);
+
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
+
+        // Jalankan hati berjatuhan di latar belakang saat DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            setInterval(createFallingHeart, 300); // Setiap 0.3 detik, buat hati baru
+        });
+
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const apologyCard = document.getElementById('apologyCard');
+        const welcomeButton = document.getElementById('welcomeButton');
+        const magicButton = document.getElementById('magicButton');
+        const bouquetPage = document.getElementById('bouquetPage');
+        const showPhotosButton = document.getElementById('showPhotosButton');
+        const photoGalleryPage = document.getElementById('photoGalleryPage');
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const closeModalButton = document.getElementById('closeModal');
+        const galleryImageWrappers = document.querySelectorAll('.gallery-image-wrapper');
+        const galleryTitleButton = document.getElementById('galleryTitleButton');
+        const whatsappButton = document.getElementById('whatsappButton'); // Tombol WhatsApp baru
+
+
+        // Fungsi untuk membuat ledakan hati di tengah elemen
+        function createHeartBurst(parentEl) {
+            const numberOfHearts = 15; // Jumlah hati dalam ledakan
+            // Clear existing hearts to prevent accumulation if clicked multiple times quickly
+            parentEl.querySelectorAll('.balloon-heart').forEach(heart => heart.remove());
+
+            for (let i = 0; i < numberOfHearts; i++) {
+                const heart = document.createElement('span');
+                heart.classList.add('balloon-heart'); // Re-use balloon-heart style for burst effect
+                heart.innerHTML = '💖';
+                parentEl.appendChild(heart); // Tambahkan ke elemen induk yang ditentukan
+
+                // Posisi awal di tengah elemen
+                const centerX = parentEl.clientWidth / 2;
+                const centerY = parentEl.clientHeight / 2;
+
+                heart.style.left = `${centerX}px`;
+                heart.style.top = `${centerY}px`;
+
+                // Arah acak untuk ledakan
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 150; // Jarak ledakan
+                heart.style.setProperty('--balloon-x', `${Math.cos(angle) * distance}px`);
+                heart.style.setProperty('--float-y', `${Math.sin(angle) * distance}px`);
+
+                heart.style.animationDelay = `${i * 0.05}s`;
+                heart.style.animationDuration = `${1 + Math.random() * 1.5}s`; // Durasi burst lebih pendek
+
+                heart.addEventListener('animationend', () => {
+                    heart.remove();
+                });
+            }
+        }
+
+
+        // Event listener untuk tombol "HAYY KAKAA KLIK INI KAAA!!"
+        welcomeButton.addEventListener('click', function() {
+            welcomeScreen.classList.add('hidden');
+
+            setTimeout(() => {
+                apologyCard.style.display = 'flex';
+                apologyCard.classList.add('show-card');
+            }, 500); /* Sesuaikan dengan durasi transisi welcomeScreen */
+
+            const buttonRect = welcomeButton.getBoundingClientRect();
+            const numberOfBalloons = 8;
+            for (let i = 0; i < numberOfBalloons; i++) {
+                const balloon = document.createElement('span');
+                balloon.classList.add('balloon-heart');
+                balloon.innerHTML = '💖';
+                document.body.appendChild(balloon);
+
+                balloon.style.left = `${buttonRect.left + buttonRect.width / 2 + (Math.random() - 0.5) * 80}px`;
+                balloon.style.top = `${buttonRect.top + buttonRect.height / 2 + (Math.random() - 0.5) * 40}px`;
+                balloon.style.animationDelay = `${i * 0.15}s`;
+                balloon.style.setProperty('--balloon-x', `${(Math.random() - 0.5) * 100}px`);
+
+                balloon.addEventListener('animationend', () => {
+                    balloon.remove();
+                });
+            }
+        });
+
+        // Event listener untuk tombol "KLIK INII KAKK ADAA SESUATU BUAT KAKAA"
+        magicButton.addEventListener('click', function() {
+            apologyCard.classList.remove('show-card');
+            apologyCard.classList.add('hidden-card');
+
+            setTimeout(() => {
+                apologyCard.style.display = 'none';
+                bouquetPage.style.display = 'flex';
+                bouquetPage.classList.add('show-bouquet');
+
+                // Aktifkan bintang di sekitar buket saat halaman buket muncul
+                const starDecos = document.querySelectorAll('.star-heart-deco');
+                starDecos.forEach(star => {
+                    star.style.opacity = 1; // Tampilkan bintang
+                });
+
+            }, 500);
+        });
+
+        // Event listener untuk tombol "INI KAK KLIK KAAA"
+        showPhotosButton.addEventListener('click', function() {
+            bouquetPage.classList.remove('show-bouquet');
+            // Sembunyikan bintang-bintang saat meninggalkan halaman buket
+            document.querySelectorAll('.star-heart-deco').forEach(star => star.style.opacity = 0);
+
+
+            setTimeout(() => {
+                bouquetPage.style.display = 'none';
+                photoGalleryPage.style.display = 'flex';
+                photoGalleryPage.classList.add('show-gallery');
+                // Trigger animation for each image wrapper in the gallery
+                galleryImageWrappers.forEach((wrapper, index) => {
+                    // Reset animation to re-trigger if navigating back and forth
+                    wrapper.classList.remove('animate-in');
+                    void wrapper.offsetWidth; // Trigger reflow to reset animation
+                    wrapper.classList.add('animate-in');
+                    wrapper.style.animationDelay = `${index * 0.1}s`; // Staggered delay
+                });
+            }, 500);
+        });
+
+        // Event listener untuk klik pada judul galeri (sekarang tombol)
+        galleryTitleButton.addEventListener('click', function() {
+            createHeartBurst(galleryTitleButton); // Burst hearts around the title button
+        });
+
+        // Event listener untuk setiap gambar di galeri
+        galleryImageWrappers.forEach(wrapper => {
+            wrapper.addEventListener('click', function() {
+                const imageUrl = this.querySelector('.gallery-image').src;
+                modalImage.src = imageUrl;
+                imageModal.classList.add('show-modal');
+                createHeartBurst(imageModal.querySelector('.modal-content')); // Burst hearts around the modal image
+            });
+        });
+
+        // Event listener untuk tombol tutup modal
+        closeModalButton.addEventListener('click', function() {
+            imageModal.classList.remove('show-modal');
+            // Hapus hati yang mungkin ada di modal setelah ditutup
+            imageModal.querySelectorAll('.balloon-heart').forEach(heart => heart.remove());
+        });
+
+        // Tutup modal jika mengklik di luar gambar
+        imageModal.addEventListener('click', function(event) {
+            if (event.target === imageModal) {
+                imageModal.classList.remove('show-modal');
+                // Hapus hati yang mungkin ada di modal setelah ditutup
+                imageModal.querySelectorAll('.balloon-heart').forEach(heart => heart.remove());
+            }
+        });
+
+        // Event listener untuk tombol WhatsApp
+        whatsappButton.addEventListener('click', function() {
+            const phoneNumber = '6285816148963'; // Nomor WhatsApp Anda
+            const message = encodeURIComponent('haii adekkk, kakaa udahh ngeklik linknyaa nihh xixixixixx');
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank'); // Membuka link di tab/jendela baru
+        });
+    </script>
+</body>
+</html>
+
